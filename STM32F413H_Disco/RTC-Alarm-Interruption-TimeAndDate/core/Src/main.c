@@ -126,18 +126,18 @@ HAL_TIM_PWM_Init(&htim5);
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		  if(RTC->ISR & RTC_FLAG_ALRAF)
-		  {
-			  HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_4);
-			  HAL_GPIO_TogglePin(LED2_GREEN_GPIO_Port, LED2_GREEN_Pin);
-			  while(val<255)
-			  {
-				  htim5.Instance->CCR4 = val;
-				  val+=30;
-				  HAL_Delay(200);
-			  }
-
-		  }
+	  while(val<255)
+	{
+		if(RTC->ISR & RTC_FLAG_ALRAF)
+		{
+			HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_4);
+			HAL_GPIO_TogglePin(LED2_GREEN_GPIO_Port, LED2_GREEN_Pin);
+			htim5.Instance->CCR4 = val;
+			val+=30;
+			HAL_Delay(200);
+		}
+	}
+	val=0;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
