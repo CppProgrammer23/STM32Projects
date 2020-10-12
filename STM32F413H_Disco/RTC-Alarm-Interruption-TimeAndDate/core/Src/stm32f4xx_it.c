@@ -59,7 +59,8 @@
 /* External variables --------------------------------------------------------*/
 extern RTC_HandleTypeDef hrtc;
 /* USER CODE BEGIN EV */
-
+extern TIM_HandleTypeDef htim5;
+extern uint8_t val;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -223,7 +224,9 @@ void EXTI0_IRQHandler(void)
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
   /* USER CODE BEGIN EXTI0_IRQn 1 */
   HAL_GPIO_WritePin(LED2_GREEN_GPIO_Port, LED2_GREEN_Pin, 0);
+  HAL_TIM_PWM_Stop(&htim5, TIM_CHANNEL_4);
   RTC->ISR &= ~RTC_FLAG_ALRAF;
+  val=0;
   /* USER CODE END EXTI0_IRQn 1 */
 }
 
@@ -237,7 +240,10 @@ void EXTI1_IRQHandler(void)
   /* USER CODE END EXTI1_IRQn 0 */
   HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
   /* USER CODE BEGIN EXTI1_IRQn 1 */
-
+  HAL_GPIO_WritePin(LED2_GREEN_GPIO_Port, LED2_GREEN_Pin, 0);
+  HAL_TIM_PWM_Stop(&htim5, TIM_CHANNEL_4);
+  RTC->ISR &= ~RTC_FLAG_ALRAF;
+  val=0;
   /* USER CODE END EXTI1_IRQn 1 */
 }
 
