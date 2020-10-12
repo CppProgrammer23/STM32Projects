@@ -48,6 +48,8 @@ FMPI2C_HandleTypeDef hfmpi2c1;
 
 RTC_HandleTypeDef hrtc;
 
+TIM_HandleTypeDef htim5;
+
 UART_HandleTypeDef huart10;
 UART_HandleTypeDef huart6;
 
@@ -68,6 +70,7 @@ static void MX_FSMC_Init(void);
 static void MX_UART10_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_RTC_Init(void);
+static void MX_TIM5_Init(void);
 /* USER CODE BEGIN PFP */
 static void InitializeScreen(void);
 static void getTimeAndDate(void);
@@ -113,24 +116,33 @@ int main(void)
   MX_UART10_Init();
   MX_USART6_UART_Init();
   MX_RTC_Init();
+  MX_TIM5_Init();
   /* USER CODE BEGIN 2 */
   InitializeScreen();
+HAL_TIM_PWM_Init(&htim5);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  if(RTC->ISR & RTC_FLAG_ALRAF)
-	  {
-		  HAL_GPIO_TogglePin(LED2_GREEN_GPIO_Port, LED2_GREEN_Pin);
-		  	HAL_Delay(200);
-	  }
+		  if(RTC->ISR & RTC_FLAG_ALRAF)
+		  {
+			  HAL_TIM_PWM_Start(&htim5, TIM_CHANNEL_4);
+			  HAL_GPIO_TogglePin(LED2_GREEN_GPIO_Port, LED2_GREEN_Pin);
+			  while(val<255)
+			  {
+				  htim5.Instance->CCR4 = val;
+				  val+=30;
+				  HAL_Delay(200);
+			  }
+
+		  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
   }
-  /* USER CODE END 3 */
+	/* USER CODE END 3 */
 }
 
 /**
@@ -305,6 +317,50 @@ static void MX_RTC_Init(void)
   /* USER CODE BEGIN RTC_Init 2 */
 
   /* USER CODE END RTC_Init 2 */
+
+}
+
+static void MX_TIM5_Init(void)
+{
+
+  /* USER CODE BEGIN TIM5_Init 0 */
+
+  /* USER CODE END TIM5_Init 0 */
+
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM5_Init 1 */
+
+  /* USER CODE END TIM5_Init 1 */
+  htim5.Instance = TIM5;
+  htim5.Init.Prescaler = 691;
+  htim5.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim5.Init.Period = 254;
+  htim5.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim5.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_PWM_Init(&htim5) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim5, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 10;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim5, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM5_Init 2 */
+
+  /* USER CODE END TIM5_Init 2 */
+  HAL_TIM_MspPostInit(&htim5);
 
 }
 
