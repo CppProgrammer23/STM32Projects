@@ -93,7 +93,7 @@ _**STM32F746G-Disco:**_
               I2Cx_Error(i2c_handler, Addr);
           }
           return status;
-      }
+        }
 
         /**
         * @brief  Writes a value in a register of the device through BUS in using DMA mode.
