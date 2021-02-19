@@ -214,7 +214,7 @@ _**STM32F769I-Disco:**_
 
           uint8_t BSP_TS_Init(uint16_t ts_SizeX, uint16_t ts_SizeY);
           uint8_t BSP_TS_GetState(TS_StateTypeDef* TS_State);
-      }
+        }
 
         static bool bsp_ts_initialized = false;
 
