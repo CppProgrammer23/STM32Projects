@@ -13,27 +13,36 @@ _**STM32F746G-Disco:**_
 9.	C/C++ :TouchGFX (C++)
 10.	in StartDefaultTask function: add "MX_TouchGFX_Process();"
 11.	Add code STM32TouchController.cpp (that enable the touch) as following:
-    a. add the include files:
-      #include <TouchGFXHAL.hpp>
-      #include <stm32f7xx_hal.h>
-      #include <touchgfx/hal/OSWrappers.hpp>
-      #include "../../Drivers/BSP/Components/ft5336/ft5336.h"
-    b. add the following code:
-      static TS_DrvTypeDef* tsDriver;
-      extern I2C_HandleTypeDef hi2c3;
 
-      void STM32TouchController::init()
-      {
-        /* Initialize the TS driver structure */
+    a. add the include files:
+    
+      #include <TouchGFXHAL.hpp>
+      
+      #include <stm32f7xx_hal.h>
+      
+      #include <touchgfx/hal/OSWrappers.hpp>
+      
+      #include "../../Drivers/BSP/Components/ft5336/ft5336.h"
+      
+    b. add the following code:
+    
+        static TS_DrvTypeDef* tsDriver;
+      
+        extern I2C_HandleTypeDef hi2c3;
+
+        void STM32TouchController::init()
+        {
+      
+            /* Initialize the TS driver structure */
             tsDriver = &ft5336_ts_drv;
 
             /* Initialize the TS driver */
             tsDriver->Start(TS_I2C_ADDRESS);
-      }
+        }
 
-      bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
-      {
-        /* Checking if the screen has been touched */
+        bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
+        {
+            /* Checking if the screen has been touched */
 
             if (tsDriver)
             {
@@ -45,19 +54,19 @@ _**STM32F746G-Disco:**_
                 }
             }
             return false;
-      }
+        }
 
-      static void I2Cx_Error(I2C_HandleTypeDef* i2c_handler, uint8_t Addr)
-      {
+        static void I2Cx_Error(I2C_HandleTypeDef* i2c_handler, uint8_t Addr)
+        {
           /* De-initialize the I2C communication bus */
           HAL_I2C_DeInit(i2c_handler);
 
           /* Re-Initialize the I2C communication bus */
           //I2Cx_Init(i2c_handler);
-      }
+        }
 
-      /**
-        * @brief  Reads multiple data.
+        /**
+            * @brief  Reads multiple data.
         * @param  i2c_handler : I2C handler
         * @param  Addr: I2C address
         * @param  Reg: Reg address
@@ -66,13 +75,13 @@ _**STM32F746G-Disco:**_
         * @param  Length: Length of the data
         * @retval Number of read data
         */
-      static HAL_StatusTypeDef I2Cx_ReadMultiple(I2C_HandleTypeDef* i2c_handler,
+        static HAL_StatusTypeDef I2Cx_ReadMultiple(I2C_HandleTypeDef* i2c_handler,
                                                  uint8_t Addr,
                                                  uint16_t Reg,
                                                  uint16_t MemAddress,
                                                  uint8_t* Buffer,
                                                  uint16_t Length)
-      {
+        {
           HAL_StatusTypeDef status = HAL_OK;
 
           status = HAL_I2C_Mem_Read(i2c_handler, Addr, (uint16_t)Reg, MemAddress, Buffer, Length, 1000);
@@ -86,7 +95,7 @@ _**STM32F746G-Disco:**_
           return status;
       }
 
-      /**
+        /**
         * @brief  Writes a value in a register of the device through BUS in using DMA mode.
         * @param  i2c_handler : I2C handler
         * @param  Addr: Device address on BUS Bus.
@@ -96,13 +105,13 @@ _**STM32F746G-Disco:**_
         * @param  Length: buffer size to be written
         * @retval HAL status
         */
-      static HAL_StatusTypeDef I2Cx_WriteMultiple(I2C_HandleTypeDef* i2c_handler,
+        static HAL_StatusTypeDef I2Cx_WriteMultiple(I2C_HandleTypeDef* i2c_handler,
                                                   uint8_t Addr,
                                                   uint16_t Reg,
                                                   uint16_t MemAddress,
                                                   uint8_t* Buffer,
                                                   uint16_t Length)
-      {
+        {
           HAL_StatusTypeDef status = HAL_OK;
 
           status = HAL_I2C_Mem_Write(i2c_handler, Addr, (uint16_t)Reg, MemAddress, Buffer, Length, 1000);
@@ -114,7 +123,7 @@ _**STM32F746G-Disco:**_
               I2Cx_Error(i2c_handler, Addr);
           }
           return status;
-      }
+        }
 
 12.	Import ft5336, N25Q128A & the discovery files and add paths
 
@@ -132,30 +141,35 @@ _**STM32F769I-Disco:**_
 9.	C/C++ :TouchGFX (C++)
 10.	in StartDefaultTask function: add "MX_TouchGFX_Process();"
 11.	Add code STM32TouchController.cpp (that enable the touch) as following:
-    a. add the include files:
-      #include "../ft6x06/ft6x06.h"
-      #include <stm32f7xx_hal.h>
-    b. add the following code:
-      extern "C"
-    {
-      /** @brief With FT6206 : maximum 2 touches detected simultaneously
-        */
-    #define TS_MAX_NB_TOUCH                 ((uint32_t) FT6206_MAX_DETECTABLE_TOUCH)
 
-    #define TS_SWAP_NONE                    ((uint8_t) 0x01)
-    #define TS_SWAP_X                       ((uint8_t) 0x02)
-    #define TS_SWAP_Y                       ((uint8_t) 0x04)
-    #define TS_SWAP_XY                      ((uint8_t) 0x08)
+    a. add the include files:
+    
+      #include "../ft6x06/ft6x06.h"
+      
+      #include <stm32f7xx_hal.h>
+      
+    b. add the following code:
+    
+        extern "C"
+        {
+        /** @brief With FT6206 : maximum 2 touches detected simultaneously
+        */
+        #define TS_MAX_NB_TOUCH                 ((uint32_t) FT6206_MAX_DETECTABLE_TOUCH)
+
+        #define TS_SWAP_NONE                    ((uint8_t) 0x01)
+        #define TS_SWAP_X                       ((uint8_t) 0x02)
+        #define TS_SWAP_Y                       ((uint8_t) 0x04)
+        #define TS_SWAP_XY                      ((uint8_t) 0x08)
 
           /**
             * @brief TouchScreen FT6206 Slave I2C address 1
             */
-      #define TS_I2C_ADDRESS                   ((uint16_t)0x54)
+        #define TS_I2C_ADDRESS                   ((uint16_t)0x54)
 
           /**
             * @brief TouchScreen FT6336G Slave I2C address 2
             */
-      #define TS_I2C_ADDRESS_A02               ((uint16_t)0x70)
+        #define TS_I2C_ADDRESS_A02               ((uint16_t)0x70)
 
           /** @defgroup STM32F769I_DISCOVERY_TS_Exported_Types  TS Exported Types
             * @{
@@ -202,10 +216,10 @@ _**STM32F769I-Disco:**_
           uint8_t BSP_TS_GetState(TS_StateTypeDef* TS_State);
       }
 
-      static bool bsp_ts_initialized = false;
+        static bool bsp_ts_initialized = false;
 
-      void STM32TouchController::init()
-      {
+        void STM32TouchController::init()
+        {
           /**
            * Initialize touch controller and driver
            *
@@ -216,10 +230,10 @@ _**STM32F769I-Disco:**_
           }
 
           assert(bsp_ts_initialized);
-      }
+        }
 
-      bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
-      {
+        bool STM32TouchController::sampleTouch(int32_t& x, int32_t& y)
+        {
           /**
            * By default sampleTouch returns false,
            * return true if a touch has been detected, otherwise false.
@@ -242,10 +256,10 @@ _**STM32F769I-Disco:**_
               }
           }
           return false;
-      }
+        }
 
-      extern "C"
-      {
+        extern "C"
+        {
           /******************************** LINK TS (TouchScreen) ***********************/
           /**
             * @brief  Manages error callback by re-initializing I2C.
