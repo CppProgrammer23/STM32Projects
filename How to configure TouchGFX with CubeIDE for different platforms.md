@@ -139,8 +139,9 @@ _**STM32F769I-Disco:**_
 7.	Additional software: BY @ (otherwise RAM will be overflowed) @=0xC0000000(Bank1) and 0xD0000000(Bank2) (external SDRAM @)
 8.	Create the project
 9.	C/C++ :TouchGFX (C++)
-10.	in StartDefaultTask function: add "MX_TouchGFX_Process();"
-11.	Add code STM32TouchController.cpp (that enable the touch) as following:
+10.	add the pre-proc and functions as from this prototype : https://github.com/CppProgrammer23/STM32Projects/releases/tag/v0
+11.	in StartDefaultTask function: add "MX_TouchGFX_Process();"
+12.	Add code STM32TouchController.cpp (that enable the touch) as following:
 
     a. add the include files:
     
