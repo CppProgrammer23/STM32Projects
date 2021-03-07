@@ -927,26 +927,6 @@ uint8_t DHT11_Init(void)
 }
 uint8_t readDataDHT11(void)
 {
-	/*unsigned parityBuf[8];
-	unsigned decTempBuf[8];
-	unsigned intTempBuf[8];
-	unsigned decHumBuf[8];
-	unsigned intHumBuf[8];*/
-	/*for(unsigned i=0;i<39;i++)
-	{
-		while(!HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4));
-		delay_us(400);
-		if(i>=0 && i<8)
-			intHumBuf[i]=(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4)==1?1:0);
-		else if(i>7 && i<16)
-			decHumBuf[i-8]=(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4)==1?1:0);
-		else if (i>15 && i<24)
-			intTempBuf[i-16]=(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4)==1?1:0);
-		else if (i>23 && i<32)
-			decTempBuf[i-24]=(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4)==1?1:0);
-		else
-			parityBuf[i-32]=(HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_4)==1?1:0);
-	}*/
 	unsigned j;
 	for(unsigned i=0;i<8;i++)
 	{
